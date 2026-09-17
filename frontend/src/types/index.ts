@@ -103,6 +103,14 @@ export interface Well {
   created_at: string;
 }
 
+export interface RecentSeismic {
+  seismicId: number;
+  name: string;
+  projectId: number;
+  projectName?: string;
+  viewedAt: string;
+}
+
 export interface Point3D {
   x: number;
   y: number;

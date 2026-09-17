@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Layout as AntLayout, Menu, Dropdown, Avatar, Space } from 'antd';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
@@ -9,7 +9,9 @@ import {
   SettingOutlined,
 } from '@ant-design/icons';
 import { logout } from '../store/slices/authSlice';
+import { loadRecents, clearRecents } from '../store/slices/recentSlice';
 import { RootState, AppDispatch } from '../store';
+import RecentViews from './RecentViews';
 
 const { Header, Sider, Content } = AntLayout;
 
@@ -18,6 +20,13 @@ const Layout: React.FC = () => {
   const location = useLocation();
   const dispatch = useDispatch<AppDispatch>();
   const { user } = useSelector((state: RootState) => state.auth);
+
+  // 按账号加载该用户的最近访问记录（登录后进入、刷新页面都会走到这里）
+  useEffect(() => {
+    if (user?.id) {
+      dispatch(loadRecents(user.id));
+    }
+  }, [user?.id, dispatch]);
 
   const menuItems = [
     {
@@ -49,6 +58,7 @@ const Layout: React.FC = () => {
       icon: <LogoutOutlined />,
       label: '退出登录',
       onClick: () => {
+        dispatch(clearRecents());
         dispatch(logout());
         navigate('/login');
       },
@@ -91,12 +101,15 @@ const Layout: React.FC = () => {
           </span>
         </div>
 
-        <Dropdown menu={{ items: userMenuItems }} placement="bottomRight">
-          <Space style={{ cursor: 'pointer', color: 'white' }}>
-            <Avatar size="small" icon={<UserOutlined />} />
-            <span>{user?.full_name || user?.username}</span>
-          </Space>
-        </Dropdown>
+        <Space size={4}>
+          <RecentViews />
+          <Dropdown menu={{ items: userMenuItems }} placement="bottomRight">
+            <Space style={{ cursor: 'pointer', color: 'white' }}>
+              <Avatar size="small" icon={<UserOutlined />} />
+              <span>{user?.full_name || user?.username}</span>
+            </Space>
+          </Dropdown>
+        </Space>
       </Header>
 
       <AntLayout>

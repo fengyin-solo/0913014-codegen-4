@@ -34,6 +34,21 @@ export const fetchSeismicData = createAsyncThunk(
   }
 );
 
+export const fetchSeismicById = createAsyncThunk(
+  'seismic/fetchSeismicById',
+  async (id: number, { rejectWithValue }) => {
+    try {
+      const response = await seismicAPI.get(id);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue({
+        message: error.response?.data?.detail || '获取地震数据失败',
+        status: error.response?.status,
+      });
+    }
+  }
+);
+
 export const uploadSeismicData = createAsyncThunk(
   'seismic/uploadSeismicData',
   async (
