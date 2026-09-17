@@ -10,6 +10,7 @@ import {
 } from '@ant-design/icons';
 import { logout } from '../store/slices/authSlice';
 import { RootState, AppDispatch } from '../store';
+import RecentSeismicDropdown from './RecentSeismicDropdown';
 
 const { Header, Sider, Content } = AntLayout;
 
@@ -91,12 +92,15 @@ const Layout: React.FC = () => {
           </span>
         </div>
 
-        <Dropdown menu={{ items: userMenuItems }} placement="bottomRight">
-          <Space style={{ cursor: 'pointer', color: 'white' }}>
-            <Avatar size="small" icon={<UserOutlined />} />
-            <span>{user?.full_name || user?.username}</span>
-          </Space>
-        </Dropdown>
+        <Space size="middle" align="center">
+          <RecentSeismicDropdown />
+          <Dropdown menu={{ items: userMenuItems }} placement="bottomRight">
+            <Space style={{ cursor: 'pointer', color: 'white' }}>
+              <Avatar size="small" icon={<UserOutlined />} />
+              <span>{user?.full_name || user?.username}</span>
+            </Space>
+          </Dropdown>
+        </Space>
       </Header>
 
       <AntLayout>
